@@ -1,0 +1,29 @@
+body {
+  background: linear-gradient(to right, #3a7bd5, #3a6073);
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+}
+
+.navbar {
+  background: #222;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 30px;
+  color: #00e676;
+}
+
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  background: #00e676;
+  border: none;
+  color: #000;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1de9b6;
+}
