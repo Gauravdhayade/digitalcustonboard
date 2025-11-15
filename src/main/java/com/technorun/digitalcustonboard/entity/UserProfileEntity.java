@@ -1,7 +1,9 @@
 package com.technorun.digitalcustonboard.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -10,6 +12,7 @@ public class UserProfileEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Long userId;
 
 	private String firstName;
@@ -19,7 +22,10 @@ public class UserProfileEntity {
 	private String password;
 	private String phone;
 	private String pan;
-	private String dob;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private LocalDate dob;
+
 	private boolean emailVerified = false;
 
 	@Lob
@@ -29,14 +35,15 @@ public class UserProfileEntity {
 	private byte[] panCardDocs;
 
 	@Lob
+	private byte[] profilePhoto;
+
+	@Lob
 	private byte[] addressVerificationDocs;
 
 	@Lob
 	private byte[] signatureDocs;
 
 	@OneToOne
-	@JoinColumn(name = "user_details_id") // foreign key column
+	@JoinColumn(name = "user_details_id")
 	private UserDetailsEntity userDetails;
-
-	// Getters and setters
 }

@@ -17,12 +17,8 @@ export const uploadDocs = async (formData) => {
 };
 
 export const loginUser = async (email, password) => {
-	return axios.post(`${API_BASE}/auth/login`, {
-		email: email,
-		password: password
-	});
+	return axios.post(`${API_BASE}/auth/login`, { email, password });
 };
-
 
 export const fetchDashboardData = async () => {
 	return axios.get(`${API_BASE}/user-profile-data`);

@@ -1,163 +1,135 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+	const navigate = useNavigate();
+	const [user, setUser] = useState(null);
+	const email = localStorage.getItem("userEmail");
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      const userId = localStorage.getItem("userId"); // ✅ Dynamic userId from login
-      const token = localStorage.getItem("authToken");
+	useEffect(() => {
+		const loadUser = async () => {
+			try {
+				const res = await fetch(`http://localhost:8080/auth/dashboard-by-email?email=${email}`);
+				const data = await res.json();
 
-      if (!userId || !token) {
-        alert("⚠️ Please login first!");
-        navigate("/login");
-        return;
-      }
+				if (res.ok) setUser(data);
+			} catch (e) {
+				console.error(e);
+			}
+		};
 
-      try {
-        const res = await axios.get(`http://localhost:8080/auth/dashboard?userId=${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUserData(res.data);
-        setLoading(false);
-      } catch (err) {
-        console.error("❌ Error fetching dashboard:", err);
-        setLoading(false);
-      }
-    };
-    fetchDashboardData();
-  }, [navigate]);
+		loadUser();
+	}, [email]);
 
-  // Loader
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-orange-600 text-xl font-semibold">
-        Loading your dashboard...
-      </div>
-    );
-  }
+	const logout = () => {
+		localStorage.clear();
+		window.location.href = "/login";
+	};
 
-  // Error case
-  if (!userData) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-red-500 font-semibold">
-        ❌ Failed to load dashboard data.
-      </div>
-    );
-  }
+	if (!user) {
+		return (
+			<div className="min-h-screen flex justify-center items-center text-xl text-gray-600">
+				Loading Dashboard...
+			</div>
+		);
+	}
 
-  // Logout handler
-  const handleLogout = () => {
-    localStorage.clear();
-    alert("👋 Logged out successfully!");
-    navigate("/login");
-  };
+	return (
+		<div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-200 p-6">
+			{/* Header */}
+			<div className="flex justify-between items-center bg-white/80 px-6 py-4 rounded-xl shadow-md">
+				<h1 className="text-2xl font-bold text-orange-700">🏦 DigiBank Dashboard</h1>
 
-  // ✅ UI Layout
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-200 flex flex-col">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-orange-500 to-orange-600 shadow-md py-4 text-center">
-        <h1 className="text-3xl font-bold text-white">🏦 DigiBank Dashboard</h1>
-      </header>
+				<button
+					onClick={logout}
+					className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg shadow"
+				>
+					Logout
+				</button>
+			</div>
 
-      {/* Main Content */}
-      <main className="flex-grow flex justify-center py-10">
-        <div className="bg-white shadow-2xl rounded-2xl w-full max-w-3xl p-8">
-          <h2 className="text-2xl font-semibold text-orange-600 mb-6 text-center">
-            Welcome, {userData.firstName} {userData.lastName} 👋
-          </h2>
+			{/* Welcome Section */}
+			<div className="text-center mt-10">
+				<h2 className="text-3xl font-bold text-orange-700">
+					Welcome, {user.firstName} {user.lastName} 👋
+				</h2>
+				<p className="text-gray-600 mt-2">Here is your onboarding & KYC progress.</p>
+			</div>
 
-          {/* Personal Details */}
-          <section className="border-b pb-4 mb-4">
-            <h3 className="text-lg font-semibold text-gray-700 mb-3">
-              Personal Information
-            </h3>
-            <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-              <p>
-                <strong>Email:</strong> {userData.email}
-              </p>
-              <p>
-                <strong>Phone:</strong> {userData.phone}
-              </p>
-              <p>
-                <strong>PAN:</strong> {userData.pan}
-              </p>
-              <p>
-                <strong>DOB:</strong> {userData.dob}
-              </p>
-            </div>
-          </section>
+			{/* Navigation Buttons */}
+			<div className="mt-10 flex justify-center">
+				<div className="bg-white/90 p-6 rounded-xl shadow-lg flex gap-6">
 
-          {/* KYC Status */}
-          <section className="border-b pb-4 mb-4">
-            <h3 className="text-lg font-semibold text-gray-700 mb-3">
-              KYC Documents
-            </h3>
-            <ul className="text-sm text-gray-600">
-              <li>
-                📄 Aadhaar Card:{" "}
-                {userData.aadharCardDocs ? "✅ Uploaded" : "❌ Pending"}
-              </li>
-              <li>
-                🪪 PAN Card:{" "}
-                {userData.panCardDocs ? "✅ Uploaded" : "❌ Pending"}
-              </li>
-              <li>
-                🏠 Address Proof:{" "}
-                {userData.addressVerificationDocs ? "✅ Uploaded" : "❌ Pending"}
-              </li>
-              <li>
-                ✍️ Signature:{" "}
-                {userData.signatureDocs ? "✅ Uploaded" : "❌ Pending"}
-              </li>
-            </ul>
-          </section>
+					<button
+						onClick={() => navigate("/profile")}
+						className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow transition-all flex items-center gap-2"
+					>
+						👤 View Profile
+					</button>
 
-          {/* Account Summary */}
-          <section>
-            <h3 className="text-lg font-semibold text-gray-700 mb-3">
-              Account Summary
-            </h3>
-            <p className="text-sm text-gray-600">
-              Account Created:{" "}
-              <strong>
-                {userData.emailVerified
-                  ? "✅ Verified"
-                  : "⚠️ Pending Verification"}
-              </strong>
-            </p>
-            <p className="text-sm text-gray-600 mt-1">
-              Account Number: <strong>XXXX-XXXX-8907</strong>
-            </p>
-            <p className="text-sm text-gray-600 mt-1">
-              Current Balance: <strong>₹ 50,000.00</strong>
-            </p>
-          </section>
+					<button
+						onClick={() => navigate("/kyc")}
+						className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow transition-all flex items-center gap-2"
+					>
+						🔐 KYC Status
+					</button>
 
-          <div className="text-center mt-8">
-            <button
-              onClick={handleLogout}
-              className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-6 rounded-lg font-semibold shadow-md"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </main>
+					<button
+						onClick={() => navigate("/upload-docs")}
+						className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow transition-all flex items-center gap-2"
+					>
+						📁 Upload Documents
+					</button>
 
-      {/* Footer */}
-      <footer className="text-center text-gray-500 text-sm py-4 border-t border-orange-200">
-        © {new Date().getFullYear()} KDI Digital Bank. All Rights Reserved.
-      </footer>
-    </div>
-  );
+				</div>
+			</div>
+
+			{/* Main Data Cards */}
+			<div className="grid md:grid-cols-3 gap-8 mt-12 max-w-6xl mx-auto">
+
+				{/* Personal Details */}
+				<div className="bg-white p-6 rounded-xl shadow-md border">
+					<h3 className="text-xl font-semibold text-orange-700 mb-3">👤 Personal Details</h3>
+					<p><b>Name:</b> {user.firstName} {user.lastName}</p>
+					<p><b>Email:</b> {user.email}</p>
+					<p><b>Phone:</b> {user.phone}</p>
+					<p><b>PAN:</b> {user.pan}</p>
+					<p><b>DOB:</b> {user.dob}</p>
+				</div>
+
+				{/* KYC Section */}
+				<div className="bg-white p-6 rounded-xl shadow-md border">
+					<h3 className="text-xl font-semibold text-orange-700 mb-3">🔒 KYC Verification</h3>
+
+					<p>
+						<b>Email Verified:</b>{" "}
+						{user.emailVerified ? (
+							<span className="text-green-600 font-bold">✔ Verified</span>
+						) : (
+							<span className="text-red-600 font-bold">✘ Not Verified</span>
+						)}
+					</p>
+
+					<p className="mt-3 text-gray-600">
+						Your identity verification helps to secure your banking access.
+					</p>
+				</div>
+
+				{/* Document Upload Status */}
+				<div className="bg-white p-6 rounded-xl shadow-md border">
+					<h3 className="text-xl font-semibold text-orange-700 mb-3">📄 Document Upload</h3>
+
+					<ul className="text-gray-700 space-y-2">
+						<li>Aadhar: {user.aadharCardDocs ? "✔ Uploaded" : "✘ Pending"}</li>
+						<li>PAN: {user.panCardDocs ? "✔ Uploaded" : "✘ Pending"}</li>
+						<li>Address: {user.addressVerificationDocs ? "✔ Uploaded" : "✘ Pending"}</li>
+						<li>Signature: {user.signatureDocs ? "✔ Uploaded" : "✘ Pending"}</li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+	);
 };
 
 export default Dashboard;
