@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/digitalcustonboard/static/css/main.df70db0d.css",
+    "main.js": "/digitalcustonboard/static/js/main.c5e972c4.js",
+    "index.html": "/digitalcustonboard/index.html",
+    "main.df70db0d.css.map": "/digitalcustonboard/static/css/main.df70db0d.css.map",
+    "main.c5e972c4.js.map": "/digitalcustonboard/static/js/main.c5e972c4.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.df70db0d.css",
+    "static/js/main.c5e972c4.js"
+  ]
+}
