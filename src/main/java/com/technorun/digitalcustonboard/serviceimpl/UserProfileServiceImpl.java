@@ -29,39 +29,36 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Override
 	public String registerUser(UserProfileEntity user) {
 		try {
-			// Check if user already exists
 			if (userProfileRepository.findByEmail(user.getEmail()) != null) {
 				return "User already exists";
 			}
 
-			// Save user
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+
 			userProfileRepository.save(user);
 			return "User registered successfully";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "Error: " + e.getMessage();
 		}
-
 	}
 
 	@Override
 	public String loginAndGetToken(String email, String password) {
-
 		UserProfileEntity user = userProfileRepository.findByEmail(email);
 		if (user == null) {
-			return null; // frontend => Invalid Email
+			return null; // indicates invalid email to controller
 		}
 
 		boolean match = (passwordEncoder != null) ? passwordEncoder.matches(password, user.getPassword())
 				: password.equals(user.getPassword());
 
 		if (!match) {
-			return null; // frontend => Invalid Password
+			return null; // indicates invalid password
 		}
 
-		// 🔥 Generate simple token (demo purpose)
+		// Simple token for demo (replace with JWT in prod)
 		String token = email + "_TOKEN_" + System.currentTimeMillis();
-
 		return token;
 	}
 

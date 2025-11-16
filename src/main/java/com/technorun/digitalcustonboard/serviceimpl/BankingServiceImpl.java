@@ -85,6 +85,7 @@ public class BankingServiceImpl implements BankingService {
 
 	@Override
 	public List<Transaction> getTransactions(Long userId) {
-		return transactionRepository.findByAccount_User_Id(userId);
+		return transactionRepository.findByAccount_User_UserId(userId);
+
 	}
 }

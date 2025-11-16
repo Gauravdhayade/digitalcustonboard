@@ -1,29 +1,39 @@
 import axios from "axios";
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = "http://localhost:8080/api";
+
+// Attach token for secured requests
+axios.interceptors.request.use((config) => {
+	const token = localStorage.getItem("token");
+	if (token) {
+		config.headers["Authorization"] = `Bearer ${token}`;
+	}
+	return config;
+});
 
 export const registerUser = async (userData) => {
+	// BACKEND: /api/auth/register
 	return axios.post(`${API_BASE}/auth/register`, userData);
 };
 
 export const verifyOtp = async (otpData) => {
-	return axios.post(`${API_BASE}/verify-otp`, otpData);
+	// BACKEND: /api/auth/verify-otp
+	return axios.post(`${API_BASE}/auth/verify-otp`, otpData);
 };
 
 export const uploadDocs = async (formData) => {
-	return axios.post(`${API_BASE}/upload-docs`, formData, {
+	// BACKEND: /api/user/upload-docs
+	return axios.post(`${API_BASE}/user/upload-docs`, formData, {
 		headers: { "Content-Type": "multipart/form-data" },
 	});
 };
 
 export const loginUser = async (email, password) => {
-	return axios.post(`${API_BASE}/auth/login`, {
-		email: email,
-		password: password
-	});
+	// BACKEND: /api/auth/login
+	return axios.post(`${API_BASE}/auth/login`, { email, password });
 };
 
-
 export const fetchDashboardData = async () => {
-	return axios.get(`${API_BASE}/user-profile-data`);
+	// BACKEND: /api/user/profile-details
+	return axios.get(`${API_BASE}/user/profile-details`);
 };

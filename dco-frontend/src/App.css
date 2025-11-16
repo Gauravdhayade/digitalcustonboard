@@ -1,203 +1,33 @@
-/* 🌐 KDI Bank Theme (ICICI Light Edition) */
 body {
-  font-family: "Poppins", sans-serif;
+  background: #f3f8ff;
   margin: 0;
-  padding: 0;
-  color: #4B2E1E;
-  background: linear-gradient(135deg, #FFE8CC, #FFD6B0, #FF914D);
-  background-size: 400% 400%;
-  animation: gradientShift 14s ease infinite;
+  font-family: "Inter", sans-serif;
 }
 
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* 🏦 Navbar */
-.navbar {
-  background: rgba(255, 145, 77, 0.9);
-  color: #ffffff;
-  padding: 18px 0;
-  text-align: center;
-  font-weight: 600;
-  font-size: 1.3rem;
-  letter-spacing: 0.5px;
-  box-shadow: 0 3px 10px rgba(255, 145, 77, 0.3);
-}
-
-/* ✨ Animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* 🌈 Form Container */
-.form-container {
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(20px);
+.card {
+  background: white;
+  padding: 20px;
   border-radius: 16px;
-  width: 420px;
-  margin: 80px auto;
-  padding: 35px;
-  text-align: center;
-  color: #4B2E1E;
-  box-shadow: 0 6px 20px rgba(255, 145, 77, 0.25);
-  animation: fadeIn 0.6s ease-in-out;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
 }
 
-/* 🧍‍♂️ Inputs */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="file"],
-input[type="date"] {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border: 1px solid rgba(255, 145, 77, 0.4);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.7);
-  color: #4B2E1E;
-  font-size: 0.95rem;
-  outline: none;
-  transition: 0.3s;
-}
-
-input::placeholder {
-  color: rgba(80, 40, 20, 0.6);
-}
-
-input:focus {
-  border-color: #FF914D;
-  box-shadow: 0 0 10px rgba(255, 145, 77, 0.4);
-}
-
-/* 🔘 Buttons */
 button {
   width: 100%;
-  border: none;
-  border-radius: 8px;
   padding: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-/* 🧾 Register */
-.register-btn {
-  background: linear-gradient(90deg, #FFB070, #FF914D);
+  border-radius: 12px;
+  border: none;
+  background: #2563eb;
   color: white;
-  box-shadow: 0 4px 12px rgba(255, 145, 77, 0.25);
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 10px;
 }
 
-.register-btn:hover {
-  background: linear-gradient(90deg, #FFD6B0, #FF914D);
-  transform: scale(1.05);
-}
-
-/* 🔐 Login */
-.login-btn {
-  background: rgba(255, 255, 255, 0.4);
-  color: #4B2E1E;
-  border: 1px solid rgba(255, 145, 77, 0.4);
-}
-
-.login-btn:hover {
-  background: rgba(255, 255, 255, 0.6);
-  transform: scale(1.05);
-}
-
-/* 🔄 Button Row */
-.button-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-/* ✅ Alerts */
-.success-msg { color: #1C7C54; font-weight: 600; }
-.error-msg { color: #C62828; font-weight: 600; }
-
-/* 🌆 Page Backgrounds */
-.register-page, .login-container, .otp-page {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #FFF9F5, #FFE8CC, #FFD6B0);
-  background-size: 400% 400%;
-  animation: gradientShift 10s ease infinite;
-  font-family: "Poppins", sans-serif;
-}
-
-/* 🧾 Card Layouts */
-.register-card, .login-box, .otp-card {
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(25px);
-  border-radius: 20px;
-  padding: 40px 35px;
-  width: 430px;
-  text-align: center;
-  color: #4B2E1E;
-  box-shadow: 0 8px 32px rgba(255, 145, 77, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  animation: fadeIn 0.8s ease-in-out;
-}
-
-/* Headings */
-.register-card h2, .login-box h2, .otp-card h2 {
-  font-weight: 700;
-  color: #CC5A1B;
-  font-size: 1.6rem;
-  margin-bottom: 8px;
-}
-
-/* Subtitle */
-.subtitle {
-  color: #FF914D;
-  font-size: 0.9rem;
-  margin-bottom: 25px;
-}
-
-/* 🔒 OTP Button */
-.verify-btn {
+input {
   width: 100%;
-  background: linear-gradient(90deg, #FFB070, #FF914D);
-  color: white;
-  border: none;
-  border-radius: 8px;
   padding: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 15px;
-  transition: 0.3s;
-  box-shadow: 0 3px 10px rgba(255, 145, 77, 0.4);
-}
-
-.verify-btn:hover {
-  transform: scale(1.05);
-  background: linear-gradient(90deg, #FFD6B0, #FF914D);
-  box-shadow: 0 4px 14px rgba(255, 145, 77, 0.5);
-}
-
-/* 🔗 Links */
-.bottom-text, .register-text, .resend-text {
-  margin-top: 20px;
-  font-size: 0.9rem;
-  color: #4B2E1E;
-}
-
-.bottom-text span, .register-text span, .resend-text span {
-  color: #FF914D;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.bottom-text span:hover, .register-text span:hover, .resend-text span:hover {
-  text-decoration: underline;
-  color: #CC5A1B;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  margin: 8px 0;
 }

@@ -1,99 +1,98 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const UploadDocs = () => {
-  const navigate = useNavigate();
-  const [files, setFiles] = useState({
-    aadhar: null,
-    pancard: null,
-    address: null,
-    signature: null,
-  });
-  const [userId, setUserId] = useState("");
+	const navigate = useNavigate();
+	const userId = localStorage.getItem("userId");
 
-  const handleFileChange = (e) => {
-    setFiles({ ...files, [e.target.name]: e.target.files[0] });
-  };
+	const [files, setFiles] = useState({
+		aadhar: null,
+		pancard: null,
+		address: null,
+		signature: null,
+	});
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!userId) {
-      alert("⚠️ Please enter your User ID first.");
-      return;
-    }
+	const handleChange = (e) => {
+		setFiles({ ...files, [e.target.name]: e.target.files[0] });
+	};
 
-    const formData = new FormData();
-    formData.append("userId", userId);
-    formData.append("aadhar", files.aadhar);
-    formData.append("pancard", files.pancard);
-    formData.append("address", files.address);
-    formData.append("signature", files.signature);
+	const handleUpload = async (e) => {
+		e.preventDefault();
 
-    try {
-      const response = await axios.post("http://localhost:8080/auth/upload-docs", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+		const formData = new FormData();
+		formData.append("userId", userId);
+		formData.append("aadhar", files.aadhar);
+		formData.append("pancard", files.pancard);
+		formData.append("address", files.address);
+		formData.append("signature", files.signature);
 
-      if (response.status === 200) {
-        alert("✅ Documents uploaded successfully!");
-        navigate("/dashboard");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("❌ Failed to upload documents. Try again!");
-    }
-  };
+		const res = await fetch("http://localhost:8080/auth/upload-docs", {
+			method: "POST",
+			body: formData,
+		});
 
-  return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-green-50 to-green-200">
-      <div className="bg-white shadow-2xl p-8 rounded-2xl w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-green-600 mb-4 text-center">
-          📁 Upload Your Documents
-        </h2>
-        <p className="text-gray-600 text-sm mb-6 text-center">
-          Please upload all required KYC documents to complete your onboarding.
-        </p>
+		const text = await res.text();
+		alert(text);
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Enter Your User ID"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
+		if (res.ok) navigate("/dashboard");
+	};
 
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Aadhaar Card</label>
-              <input type="file" name="aadhar" onChange={handleFileChange} required />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">PAN Card</label>
-              <input type="file" name="pancard" onChange={handleFileChange} required />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Address Proof</label>
-              <input type="file" name="address" onChange={handleFileChange} required />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Signature</label>
-              <input type="file" name="signature" onChange={handleFileChange} required />
-            </div>
-          </div>
+	return (
+		<div className="min-h-screen bg-gradient-to-br from-purple-50 to-purple-100 p-6">
 
-          <button
-            type="submit"
-            className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold shadow-md transition-all duration-200"
-          >
-            Upload Documents
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+			{/* Header */}
+			<div className="flex justify-between items-center bg-white px-6 py-4 rounded-xl shadow-md">
+				<h1 className="text-2xl font-bold text-purple-700">📁 Upload Documents</h1>
+				<button
+					onClick={() => navigate("/dashboard")}
+					className="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg"
+				>
+					← Back to Dashboard
+				</button>
+			</div>
+
+			{/* Upload Form */}
+			<form
+				className="max-w-xl mx-auto bg-white mt-10 p-8 rounded-xl shadow-lg border"
+				onSubmit={handleUpload}
+			>
+				<h2 className="text-xl font-semibold text-purple-700 mb-4">
+					Upload Required KYC Documents
+				</h2>
+
+				<div className="space-y-5">
+
+					<div>
+						<label>Aadhar Card:</label>
+						<input type="file" name="aadhar" onChange={handleChange} className="mt-2" required />
+					</div>
+
+					<div>
+						<label>PAN Card:</label>
+						<input type="file" name="pancard" onChange={handleChange} className="mt-2" required />
+					</div>
+
+					<div>
+						<label>Address Proof:</label>
+						<input type="file" name="address" onChange={handleChange} className="mt-2" required />
+					</div>
+
+					<div>
+						<label>Signature:</label>
+						<input type="file" name="signature" onChange={handleChange} className="mt-2" required />
+					</div>
+
+				</div>
+
+				<button
+					type="submit"
+					className="mt-6 w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-semibold"
+				>
+					Upload Documents
+				</button>
+			</form>
+		</div>
+	);
 };
 
 export default UploadDocs;
