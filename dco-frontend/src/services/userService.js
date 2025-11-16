@@ -29,7 +29,10 @@ export const uploadDocs = async (formData) => {
 };
 
 export const loginUser = async (email, password) => {
+<<<<<<< HEAD
 	// BACKEND: /api/auth/login
+=======
+>>>>>>> de9aa8e6555b16cb4116f5043ffd4742619453ad
 	return axios.post(`${API_BASE}/auth/login`, { email, password });
 };
 

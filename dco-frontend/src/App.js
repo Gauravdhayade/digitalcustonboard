@@ -13,7 +13,12 @@ import TransactionHistory from "./components/TransactionHistory";
 // ⭐ NEW UI Page (Account Page)
 import AccountPage from "./components/AccountPage";
 
+import Profile from "./components/Profile";
+import KycProgress from "./components/KycProgress";
+import UploadDocs from "./components/UploadDocs";
+
 function App() {
+<<<<<<< HEAD
 	return (
 		<BrowserRouter>
 			<Routes>
@@ -51,6 +56,21 @@ function App() {
 			</Routes>
 		</BrowserRouter>
 	);
+=======
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<RegisterForm />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/kyc" element={<KycProgress />} />
+        <Route path="/upload-docs" element={<UploadDocs />} />
+      </Routes>
+    </BrowserRouter>
+  );
+>>>>>>> de9aa8e6555b16cb4116f5043ffd4742619453ad
 }
 
 export default App;
