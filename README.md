@@ -103,23 +103,10 @@ Token status updates:
 
 ---
 
-## ▶️ How to Run the Project
-
-```bash
-# 1. Clone repo
-git clone https://github.com/<username>/DigiOnboard.git
-cd DigiOnboard
-
-# 2. Configure application.properties with MySQL creds
-
-# 3. Run Spring Boot
-mvn spring-boot:run
-
 
 ## 🔮 Future Enhancements
 - JWT based authentication for login
 - Admin dashboard to verify KYC
-- Email service via SMTP or AWS SES
 - Frontend UI in React / Angular
 
 ---
