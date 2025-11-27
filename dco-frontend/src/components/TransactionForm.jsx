@@ -1,82 +1,33 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-function TransactionForm() {
-  const [amount, setAmount] = useState("");
+const TransactionForm = () => {
   const [type, setType] = useState("deposit");
-  const navigate = useNavigate();
+  const [amount, setAmount] = useState("");
+  const userId = localStorage.getItem("userId");
 
-  const handleSubmit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    alert(`✅ ${type} of ₹${amount} successful!`);
-    navigate("/history");
+    if (!userId) { alert("Login first"); return; }
+    // For demo we just show alert — integrate with backend transaction API if present
+    alert(`✅ ${type} of ₹${amount} successful`);
+    setAmount("");
   };
 
   return (
-    <div
-      style={{
-        background: "linear-gradient(135deg, #FEE140, #FA709A)",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div
-        style={{
-          background: "#fff",
-          padding: "30px 40px",
-          borderRadius: "15px",
-          textAlign: "center",
-          boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
-        }}
-      >
-        <h2>💰 Make a Transaction</h2>
-        <form onSubmit={handleSubmit}>
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            style={{
-              margin: "10px",
-              padding: "10px",
-              borderRadius: "8px",
-              border: "1px solid #ccc",
-            }}
-          >
+    <div style={{maxWidth:760, margin:'0 auto'}}>
+      <div className="card">
+        <h3>Make a Transaction</h3>
+        <form onSubmit={submit} style={{display:'grid', gap:12}}>
+          <select className="input" value={type} onChange={e=>setType(e.target.value)}>
             <option value="deposit">Deposit</option>
             <option value="withdraw">Withdraw</option>
           </select>
-          <input
-            type="number"
-            placeholder="Enter Amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            style={{
-              padding: "10px",
-              borderRadius: "8px",
-              border: "1px solid #ccc",
-              width: "80%",
-              marginBottom: "15px",
-            }}
-          />
-          <br />
-          <button
-            type="submit"
-            style={{
-              background: "linear-gradient(90deg, #43cea2, #185a9d)",
-              color: "#fff",
-              border: "none",
-              padding: "10px 25px",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
-          >
-            Proceed →
-          </button>
+          <input className="input" type="number" value={amount} onChange={e=>setAmount(e.target.value)} placeholder="Amount in ₹" />
+          <button className="btn" type="submit">Proceed</button>
         </form>
       </div>
     </div>
   );
-}
+};
 
 export default TransactionForm;

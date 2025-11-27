@@ -1,54 +1,40 @@
-// src/components/VerifyOtp.jsx
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const VerifyOtp = () => {
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
   const [otp, setOtp] = useState("");
+  const email = location.state?.email || "";
 
-  // optional: get email from register step
-  const passedEmail = location.state?.email || "";
-
-  const handleSubmit = async (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     try {
-      // backend only checks otp currently; we send otp (and email optionally)
-      const response = await fetch("http://localhost:8080/auth/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ otp, email: passedEmail }),
+      const res = await fetch("http://localhost:8080/auth/verify-otp", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ otp, email })
       });
-
-      if (response.ok) {
-        alert("✅ OTP verified successfully. Please login now.");
+      if (res.ok) {
+        alert("OTP verified");
         navigate("/login");
       } else {
-        const text = await response.text();
-        alert("❌ OTP verification failed: " + text);
+        const t = await res.text();
+        alert("Failed: " + t);
       }
-    } catch (err) {
-      console.error(err);
-      alert("⚠️ Server error.");
-    }
+    } catch (err) { alert("Server error"); }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-orange-200">
-      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
-        <h2 className="text-2xl font-bold text-orange-600 mb-3">🔐 Verify OTP</h2>
-        <p className="text-gray-600 mb-4">Enter the 6-digit OTP sent to {passedEmail || "your email"}.</p>
-
-        <form onSubmit={handleSubmit}>
-          <input
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            placeholder="Enter OTP (123456)"
-            className="w-full p-2 border rounded mb-4 text-center"
-            required
-          />
-          <button type="submit" className="w-full bg-orange-500 text-white py-2 rounded">Verify OTP</button>
-        </form>
+    <div style={{minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', padding:24}}>
+      <div style={{width:'100%', maxWidth:420}}>
+        <div className="card center">
+          <h3>Verify OTP</h3>
+          <p>Enter OTP sent to {email || "your email"}</p>
+          <form onSubmit={submit} style={{display:'grid', gap:12}}>
+            <input className="input" value={otp} onChange={e => setOtp(e.target.value)} placeholder="123456" required />
+            <button className="btn" type="submit">Verify</button>
+          </form>
+        </div>
       </div>
     </div>
   );

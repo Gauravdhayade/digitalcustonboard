@@ -1,118 +1,50 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const navigate = useNavigate();
-
-  const user = {
-    name: localStorage.getItem("userName"),
-    email: localStorage.getItem("userEmail"),
-    userId: localStorage.getItem("userId"),
-  };
-
   const [photo, setPhoto] = useState(null);
   const [preview, setPreview] = useState(null);
+  const name = localStorage.getItem("userName");
+  const email = localStorage.getItem("userEmail");
+  const userId = localStorage.getItem("userId");
 
-  // When a new photo is selected
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    setPhoto(file);
-    setPreview(URL.createObjectURL(file));
+  const handlePhoto = (e) => {
+    const f = e.target.files[0];
+    setPhoto(f);
+    setPreview(URL.createObjectURL(f));
   };
 
-  // Save photo to backend
-  const handleSavePhoto = async () => {
-    if (!photo) {
-      alert("Please select a photo first!");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("userId", user.userId);
-    formData.append("profilePhoto", photo);
-
+  const upload = async () => {
+    if (!photo) { alert("Choose photo"); return; }
+    const fd = new FormData();
+    fd.append("userId", userId);
+    fd.append("profilePhoto", photo);
     try {
-      const res = await fetch("http://localhost:8080/auth/upload-profile-photo", {
-        method: "POST",
-        body: formData,
-      });
-
-      const text = await res.text();
-      alert(text);
+      const res = await fetch("http://localhost:8080/auth/upload-profile-photo", { method:"POST", body:fd});
+      const txt = await res.text();
+      alert(txt);
     } catch (err) {
-      alert("Error uploading photo: " + err);
+      alert("Upload error");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-6">
-
-      {/* Header */}
-      <div className="flex justify-between items-center bg-white/80 px-6 py-4 rounded-xl shadow-md">
-        <h1 className="text-2xl font-bold text-blue-700">👤 Profile</h1>
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="px-5 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
-        >
-          ← Back to Dashboard
-        </button>
-      </div>
-
-      {/* Profile Info Box */}
-      <div className="max-w-xl mx-auto bg-white mt-10 p-8 rounded-xl shadow-lg border">
-
-        {/* Profile Photo Section */}
-        <div className="flex flex-col items-center mb-6">
-        
-          <div className="w-32 h-32 rounded-full overflow-hidden shadow-md border">
-            {preview ? (
-              <img src={preview} alt="Preview" className="w-full h-full object-cover" />
-            ) : (
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                alt="Default Avatar"
-                className="w-full h-full object-cover opacity-70"
-              />
-            )}
+    <div style={{maxWidth:760, margin:'0 auto'}}>
+      <div className="card">
+        <div style={{display:'flex', gap:18, alignItems:'center'}}>
+          <div style={{width:96, height:96, borderRadius:12, overflow:'hidden', background:'#f3f4f6'}}>
+            {preview ? <img src={preview} alt="preview" style={{width:'100%', height:'100%', objectFit:'cover'}} /> : <div style={{padding:18}}>No Photo</div>}
           </div>
-
-          <label className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700">
-            Choose Photo
-            <input
-              type="file"
-              className="hidden"
-              accept="image/*"
-              onChange={handlePhotoChange}
-            />
-          </label>
-
-          <button
-            onClick={handleSavePhoto}
-            className="mt-3 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-          >
-            Save Photo
-          </button>
+          <div>
+            <h3 style={{margin:0}}>{name}</h3>
+            <p style={{margin:0, color:'#6b7280'}}>{email}</p>
+            <p style={{marginTop:6, fontSize:13, color:'#6b7280'}}>User ID: {userId}</p>
+          </div>
         </div>
 
-        <h2 className="text-xl font-semibold text-blue-700 mb-4">
-          Your Basic Information
-        </h2>
-
-        <p className="text-gray-700 text-lg">
-          <b>Name:</b> {user.name}
-        </p>
-
-        <p className="text-gray-700 text-lg mt-2">
-          <b>Email:</b> {user.email}
-        </p>
-
-        <p className="text-gray-700 text-lg mt-2">
-          <b>User ID:</b> {user.userId}
-        </p>
-
-        <p className="text-gray-600 mt-6">
-          Update your profile photo anytime for better personalization.
-        </p>
+        <div style={{marginTop:16}}>
+          <input type="file" accept="image/*" onChange={handlePhoto} />
+          <button className="btn" onClick={upload} style={{marginLeft:10}}>Upload Photo</button>
+        </div>
       </div>
     </div>
   );

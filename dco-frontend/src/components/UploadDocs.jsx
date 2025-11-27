@@ -1,98 +1,79 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const UploadDocs = () => {
-	const navigate = useNavigate();
-	const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("userId");
+  const [aadhar, setAadhar] = useState(null);
+  const [pancard, setPancard] = useState(null);
+  const [address, setAddress] = useState(null);
+  const [signature, setSignature] = useState(null);
 
-	const [files, setFiles] = useState({
-		aadhar: null,
-		pancard: null,
-		address: null,
-		signature: null,
-	});
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("upload clicked");
 
-	const handleChange = (e) => {
-		setFiles({ ...files, [e.target.name]: e.target.files[0] });
-	};
+    if (!userId) { alert("Please login"); return; }
 
-	const handleUpload = async (e) => {
-		e.preventDefault();
+    const formData = new FormData();
+    formData.append("userId", userId);
+    formData.append("aadhar", aadhar);
+    formData.append("pan", pancard);
+    formData.append("address", address);       // add this if backend expects it
+    formData.append("signature", signature);
 
-		const formData = new FormData();
-		formData.append("userId", userId);
-		formData.append("aadhar", files.aadhar);
-		formData.append("pancard", files.pancard);
-		formData.append("address", files.address);
-		formData.append("signature", files.signature);
+    // debug: list keys
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1] && pair[1].name ? pair[1].name : pair[1]);
+    }
 
-		const res = await fetch("http://localhost:8080/auth/upload-docs", {
-			method: "POST",
-			body: formData,
-		});
+    try {
+      const res = await fetch("http://localhost:8080/kyc/upload", {
+        method: "POST",
+        body: formData,
+        // mode: 'cors'  // optional
+      });
 
-		const text = await res.text();
-		alert(text);
+      console.log("fetch finished, status:", res.status);
+      const text = await res.text();
+      if (res.ok) alert(text);
+      else {
+        console.error("Upload failed body:", text);
+        alert("Upload failed: " + text);
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Error: " + err.message);
+    }
+  };
 
-		if (res.ok) navigate("/dashboard");
-	};
 
-	return (
-		<div className="min-h-screen bg-gradient-to-br from-purple-50 to-purple-100 p-6">
 
-			{/* Header */}
-			<div className="flex justify-between items-center bg-white px-6 py-4 rounded-xl shadow-md">
-				<h1 className="text-2xl font-bold text-purple-700">📁 Upload Documents</h1>
-				<button
-					onClick={() => navigate("/dashboard")}
-					className="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg"
-				>
-					← Back to Dashboard
-				</button>
-			</div>
+  return (
+    <div style={{maxWidth:760, margin:'0 auto'}}>
+      <div className="card">
+        <h2>Upload KYC Documents</h2>
+        <form onSubmit={handleSubmit} style={{display:'grid', gap:12, marginTop:12}}>
+          <div>
+            <label>Aadhar</label>
+            <input type="file" accept="image/*,application/pdf" onChange={e=>setAadhar(e.target.files[0])} />
+          </div>
+          <div>
+            <label>PAN</label>
+            <input type="file" accept="image/*,application/pdf" onChange={e=>setPancard(e.target.files[0])} />
+          </div>
+          <div>
+            <label>Address Proof</label>
+            <input type="file" accept="image/*,application/pdf" onChange={e=>setAddress(e.target.files[0])} />
+          </div>
+          <div>
+            <label>Signature</label>
+            <input type="file" accept="image/*,application/pdf" onChange={e=>setSignature(e.target.files[0])} />
+          </div>
 
-			{/* Upload Form */}
-			<form
-				className="max-w-xl mx-auto bg-white mt-10 p-8 rounded-xl shadow-lg border"
-				onSubmit={handleUpload}
-			>
-				<h2 className="text-xl font-semibold text-purple-700 mb-4">
-					Upload Required KYC Documents
-				</h2>
-
-				<div className="space-y-5">
-
-					<div>
-						<label>Aadhar Card:</label>
-						<input type="file" name="aadhar" onChange={handleChange} className="mt-2" required />
-					</div>
-
-					<div>
-						<label>PAN Card:</label>
-						<input type="file" name="pancard" onChange={handleChange} className="mt-2" required />
-					</div>
-
-					<div>
-						<label>Address Proof:</label>
-						<input type="file" name="address" onChange={handleChange} className="mt-2" required />
-					</div>
-
-					<div>
-						<label>Signature:</label>
-						<input type="file" name="signature" onChange={handleChange} className="mt-2" required />
-					</div>
-
-				</div>
-
-				<button
-					type="submit"
-					className="mt-6 w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-semibold"
-				>
-					Upload Documents
-				</button>
-			</form>
-		</div>
-	);
+          <button className="btn" type="submit">Upload Documents</button>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default UploadDocs;

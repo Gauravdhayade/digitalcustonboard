@@ -4,19 +4,19 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
-@Entity
 @Data
+@Entity
+@Table(name = "transactions") // change here
 public class Transaction {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	private String type;
+	private double amount;
+	private LocalDateTime timestamp;
 
-    private String type; // deposit/withdraw
-    private double amount;
-    private LocalDateTime timestamp;
-
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
+	@ManyToOne
+	@JoinColumn(name = "account_id")
+	private Account account;
 }

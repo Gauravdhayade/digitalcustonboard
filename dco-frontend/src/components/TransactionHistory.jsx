@@ -1,30 +1,23 @@
 import React from "react";
 
-function TransactionHistory() {
+const TransactionHistory = () => {
+  // For demo only - integrate real API
+  const txns = [];
+
   return (
-    <div
-      style={{
-        background: "linear-gradient(135deg, #84fab0, #8fd3f4)",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div
-        style={{
-          background: "#fff",
-          padding: "40px",
-          borderRadius: "15px",
-          textAlign: "center",
-          boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
-        }}
-      >
-        <h2>📜 Transaction History</h2>
-        <p>No transactions found yet. Your account is ready!</p>
+    <div style={{maxWidth:760, margin:'0 auto'}}>
+      <div className="card">
+        <h3>Transaction History</h3>
+        {txns.length === 0 ? (
+          <p>No transactions yet.</p>
+        ) : (
+          <ul>
+            {txns.map(t => <li key={t.id}>{t.type} ₹{t.amount} on {t.timestamp}</li>)}
+          </ul>
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default TransactionHistory;
