@@ -1,129 +1,140 @@
-# DigiOnboard – Digital Customer Onboarding System
+# DigiOnboard – Digital Customer Onboarding System  
 
-DigiOnboard is a full-stack Java Spring Boot application designed to simplify and digitize customer onboarding with OTP-based identity verification, document upload, and automated validation flow.  
-The system supports multi-stage KYC verification using **mobile OTP, email OTP, PAN verification, document upload, and status tracking**.
+DigiOnboard is a **Full-Stack Java + React Digital KYC & Banking Onboarding Platform** designed to simplify customer identity verification using **OTP Validation, Document Upload, PAN/Aadhar Verification & Automated KYC Status Tracking**.
+
+Built using:
+
+- **Spring Boot (Java)** – Backend REST APIs  
+- **React.js** – Frontend UI  
+- **MySQL** – Database  
+- **HTML/CSS/Tailwind** – UI  
+- **Maven / Node.js**  
+
+This project is designed similar to real-world banking onboarding flows (HDFC / SBI / ICICI level KYC automation).
 
 ---
 
-## 🚀 Features
+## 🚀 Features  
 
 | Module | Description |
 |--------|-------------|
-| **User Profile Registration** | Stores user details (name, phone, email, DOB, PAN, etc.) |
-| **Duplicate Validation** | Prevents registration if email / phone / PAN already exists |
-| **OTP Verification** | Mobile OTP → Email OTP verification flow |
-| **Document Upload** | Upload Aadhaar, PAN, Signature, Address proof (Binary storage in DB) |
-| **Token Table System** | Stores OTP with status, expiry & type (MOBILE / EMAIL) |
-| **Global Exception Handling** | Custom API error responses |
-| **Spring Security Configurable** | Currently open endpoints, can be restricted later |
-| **REST APIs for CRUD** | Create, Read, Update, Delete user |
-| **Database Mapping using JPA** | One-to-one & One-to-many relational schema |
+| **User Registration** | Register using Mobile + OTP Verification |
+| **Login / Authentication** | Email/Password Login |
+| **Dashboard** | Quick Actions for Account Open, KYC, Transactions |
+| **KYC Document Upload** | Upload Aadhar, PAN, Address Proof, Signature |
+| **KYC Status Tracking** | Pending / Verified / Rejected statuses |
+| **Admin Panel** | Verify / Reject customer KYC |
+| **Account Opening** | Create bank account for customer |
+| **Transaction History** | Deposit / Withdraw tracking |
 
 ---
 
-## 🧠 Tech Stack
+# 🏗️ System Architecture  
 
-| Layer | Technology |
-|-------|------------|
-| Backend | Java 17, Spring Boot 3.x |
-| Security | Spring Security (configurable) |
-| ORM / DB Layer | JPA + Hibernate |
-| Database | MySQL |
-| API Format | JSON (REST) |
-| File Upload | Multipart (stored as LONGBLOB) |
-| Build Tool | Maven |
+React Frontend → Spring Boot REST API → MySQL DB
+↓ ↓ ↓
+UI Pages Controllers KYC Details
+Forms Services Transactions
+Routing Repository Accounts
+
+yaml
+Copy code
 
 ---
 
-## 📂 Project Structure (Important Files)
+# 📂 Folder Structure  
 
-src/
-├── main/java/com/technorun/digitalcustonboard/
-│ ├── DigitalcustonboardApplication.java
-│ ├── config/
-│ │ └── SecurityConfig.java
-│ ├── controller/ (not shown yet)
-│ ├── dto/
-│ │ └── UserProfileDTO.java
+digitalcustonboard/
+│
+├── dco-frontend/ # React Frontend
+│ ├── src/
+│ │ ├── components/
+│ │ │ ├── RegisterForm.jsx
+│ │ │ ├── LoginForm.jsx
+│ │ │ ├── Dashboard.jsx
+│ │ │ ├── UploadDocs.jsx
+│ │ │ ├── KycProgress.jsx
+│ │ │ ├── TransactionForm.jsx
+│ │ │ ├── AccountOpenForm.jsx
+│ │ │ ├── Sidebar.jsx
+│ │ │ └── Profile.jsx
+│ │ ├── App.js
+│ │ └── index.js
+│ └── package.json
+│
+├── src/main/java/com/technorun/digitalcustonboard/
+│ ├── controller/
+│ │ ├── AuthController.java
+│ │ ├── KycController.java
+│ │ ├── AccountController.java
+│ │ └── TransactionController.java
 │ ├── entity/
-│ │ ├── UserDetailsEntity.java
-│ │ ├── UserProfileEntity.java
-│ │ └── VerificationTokenEntity.java
+│ │ ├── UserEntity.java
+│ │ ├── KycEntity.java
+│ │ └── AccountEntity.java
 │ ├── repository/
-│ │ ├── UserProfileRepository.java
-│ │ └── VerificationTokenRepository.java
 │ ├── service/
-│ │ └── UserProfileService.java
 │ ├── serviceimpl/
-│ │ └── UserProfileServiceImpl.java
-│ └── exception/
-│ └── GlobalExceptionHandler.java
+│ └── DigitalcustonboardApplication.java
+│
+├── uploads/ # Uploaded KYC documents
+├── pom.xml
+└── README.md
 
-
----
-
-## 🗄️ Database Schema Overview
-
-### `user_profile` table  
-✔ Stores personal details + verification flags + documents
-
-### `verification_token` table  
-✔ Stores OTP with type: (`MOBILE`, `EMAIL`)  
-✔ One user can have multiple tokens → One-to-many relation
-
-### `user_details` table  
-✔ Login auth table (future use)
+yaml
+Copy code
 
 ---
 
-## 🔐 OTP Verification Flow
+# 🧪 API Endpoints (Backend)
 
-
-
-User Registration → Save Data → Generate Mobile OTP → User Verifies OTP
-↓
-If Mobile Verified → System Auto-generates Email OTP
-↓
-User Verifies Email OTP → KYC Flags Updated in DB
-
-
-Token status updates:
-- `status = true` → Active
-- `status = false` → Used or expired
+## 🔐 Authentication  
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/auth/register` | Register new user |
+| POST | `/auth/login` | Login |
 
 ---
 
-## 📌 Important Business Logic (Summary)
-
-✅ Duplicate Check: Email, Phone, PAN  
-✅ OTP Storage + Auto-generation  
-✅ Verified fields get updated in DB (`isEmailVerified`, `isPhoneVerified`)  
-✅ Docs saved as byte[] → BLOB in MySQL  
-✅ Verified user is allowed further processing
+## 🪪 KYC APIs  
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/kyc/upload` | Upload KYC Documents |
+| GET | `/kyc/status/{userId}` | Get KYC Status |
+| PUT | `/kyc/{id}/status` | Admin Verify/Reject |
 
 ---
 
-## ▶️ How to Run the Project
+## 🧾 Account APIs  
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/account/create` | Create bank account |
+| GET | `/account/{id}` | Get account details |
 
-```bash
-# 1. Clone repo
-git clone https://github.com/<username>/DigiOnboard.git
-cd DigiOnboard
+---
 
-# 2. Configure application.properties with MySQL creds
+## 💸 Transaction APIs  
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/transaction/deposit` | Deposit money |
+| POST | `/transaction/withdraw` | Withdraw money |
+| GET | `/transaction/history/{userId}` | View history |
 
-# 3. Run Spring Boot
+---
+
+# 🚀 How to Run Project Locally
+
+## 🖥️ Backend (Spring Boot)
+cd digitalcustonboard
 mvn spring-boot:run
 
+shell
+Copy code
 
-## 🔮 Future Enhancements
-- JWT based authentication for login
-- Admin dashboard to verify KYC
-- Email service via SMTP or AWS SES
-- Frontend UI in React / Angular
+## 🌐 Frontend (React)
+cd dco-frontend
+npm install
+npm start
 
----
-
-## 👤 Author
-**Developer:** Gaurav Dhayade
-**Role:** Java Full Stack Developer  
+yaml
+Copy code
