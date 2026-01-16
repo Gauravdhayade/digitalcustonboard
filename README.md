@@ -1,6 +1,6 @@
 # DigiOnboard – Digital Customer Onboarding System  
 
-DigiOnboard is a **Full-Stack Java + React Digital KYC & Banking Onboarding Platform** designed to simplify customer identity verification using **OTP Validation, Document Upload, PAN/Aadhar Verification & Automated KYC Status Tracking**.
+DigiOnboard is a Full-Stack Java + React Digital KYC & Banking Onboarding Platform** designed to simplify customer identity verification using **OTP Validation, Document Upload, PAN/Aadhar Verification & Automated KYC Status Tracking.
 
 Built using:
 
